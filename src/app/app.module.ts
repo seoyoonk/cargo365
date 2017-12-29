@@ -5,6 +5,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import { MyApp } from './app.component';
+import { RestProvider } from '../providers/rest';
+import { HttpModule } from '@angular/http';
+import { Sim } from '@ionic-native/sim';
 
 
 @NgModule({
@@ -12,7 +15,7 @@ import { MyApp } from './app.component';
     MyApp
   ],
   imports: [
-    BrowserModule,
+    BrowserModule, HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -21,7 +24,7 @@ import { MyApp } from './app.component';
   ],
   providers: [
     StatusBar,
-    SplashScreen,SpeechRecognition,
+    SplashScreen,SpeechRecognition, RestProvider, Sim, HttpModule,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
