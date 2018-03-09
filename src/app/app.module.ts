@@ -8,11 +8,12 @@ import { MyApp } from './app.component';
 import { RestProvider } from '../providers/rest';
 import { HttpModule } from '@angular/http';
 import { Sim } from '@ionic-native/sim';
-
+import { FCM } from '@ionic-native/fcm';
+import { HomePage } from '../pages/home/home'; 
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp,HomePage
   ],
   imports: [
     BrowserModule, HttpModule,
@@ -20,11 +21,11 @@ import { Sim } from '@ionic-native/sim';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp
+    MyApp,HomePage
   ],
   providers: [
     StatusBar,
-    SplashScreen,SpeechRecognition, RestProvider, Sim, HttpModule,
+    SplashScreen,SpeechRecognition, RestProvider, Sim, HttpModule,FCM, 
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

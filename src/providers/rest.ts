@@ -11,13 +11,15 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class RestProvider {
-  //public apiUrl = 'http://192.168.0.17/';
+  //public apiUrl = 'http://192.168.2.21/';
+  public currentUrl;
   public apiUrl = 'http://www.cargo365.co.kr/';
-  id;
+  id; 
   constructor(public http: Http) {
-    console.log('Hello RestProvider Provider');
+    
+    this.currentUrl = this.apiUrl;
   }
-  appStart(phone:string)
+  appStart(phone:string, token:string)
   {
     let headers = new Headers();
     if(phone.startsWith("+82"))
@@ -26,6 +28,9 @@ export class RestProvider {
     }
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append("x-phone", phone);
+    headers.append("x-push_tp", '3');
+    headers.append("x-push_token", token);
+    
     
     
     return this.http.get( this.apiUrl + "autolink/api/appStart.do", {headers : headers } ).map(

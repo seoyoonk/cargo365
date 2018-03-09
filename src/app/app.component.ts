@@ -1,26 +1,85 @@
-import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Component,ViewChild } from '@angular/core';
+import { Platform,NavController} from 'ionic-angular'; 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import { Sim } from '@ionic-native/sim';
 import { RestProvider } from '../providers/rest';
+import { FCM } from '@ionic-native/fcm';
+import { HomePage } from '../pages/home/home';
+ 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage:any ;
-
-  constructor(platform: Platform, statusBar: StatusBar, private splashScreen: SplashScreen,speechRecognition:SpeechRecognition, private rest:RestProvider,private sim: Sim ) {
+  phone:string;
+  token:string;
+   
+  constructor(private platform: Platform,  statusBar: StatusBar, private splashScreen: SplashScreen,
+      speechRecognition:SpeechRecognition, private rest:RestProvider,private sim: Sim,
+      private fcm : FCM  ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      sim.requestReadPermission();
-      speechRecognition.requestPermission();
-      
-      this.getPhoneNumber();
+      if(platform.is('cordova'))
+      { 
+        fcm.onNotification().subscribe(data=>{
+          this.rest.currentUrl =  this.rest.apiUrl + 'mautolink/cu/delivery/deliveryDetail.do?dlv_no=' +  data.dlv_no  ;
+        });
+        statusBar.styleDefault();
+        sim.requestReadPermission();
+        speechRecognition.requestPermission();
+        this.getPhoneNumber();
+        this.getFCMToken() ;  
+      }
+      else{
+        this.rootPage=HomePage;
+        
+      }
     });
+  }
+ 
+  getFCMToken() {
+    console.log("cargo365: get fcm start");
+    this.fcm.getToken().then(token=>{
+         
+        this.token = token;
+        
+        
+        this.appStart();
+      }
+      );
+     
+
+  }
+  appStart()
+  {
+    if(this.phone==null || this.token==null)
+    {
+      return ;
+    }
+    this.rest.appStart(this.phone, this.token).subscribe((data)=>{
+      //this.onFCM();
+      if(data.error == 'y')
+      {
+        alert(data.error_msg);
+        this.platform.exitApp();
+      }
+      else
+      {
+        
+        this.rootPage=HomePage;
+        this.splashScreen.hide();
+      }
+      
+      
+      
+    }, 
+    (err)=>{
+      alert("에러 " + err);
+    })
+
   }
   getPhoneNumber()
   {
@@ -29,18 +88,12 @@ export class MyApp {
         if(info.phoneNumber)
         {
           
-          this.rest.appStart(info.phoneNumber).subscribe(
-            res => {
-              
-              //this.rootPage = TabsPage;
-             
-              location.href= this.rest.apiUrl;
-              this.splashScreen.hide();
-            },
-            err => {
-                      alert("ERROR!: " +  err);
-                   }
-          );;
+          let phone: string;
+          if (info.phoneNumber.startsWith("+82")) {
+            phone = "0" + info.phoneNumber.substring(3, 5) + "-" + info.phoneNumber.substring(5, info.phoneNumber.length - 4) + "-" + info.phoneNumber.substring(info.phoneNumber.length - 4, info.phoneNumber.length);
+          }
+          this.phone = phone;
+          this.appStart();
           
         }
         else
