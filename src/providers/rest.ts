@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http,Headers } from '@angular/http';
-
+import { DomSanitizer } from '@angular/platform-browser';
 import 'rxjs/add/operator/map';
 
 /*
@@ -13,11 +13,18 @@ import 'rxjs/add/operator/map';
 export class RestProvider {
   //public apiUrl = 'http://192.168.2.21/';
   public currentUrl;
-  public apiUrl = 'http://www.cargo365.co.kr/';
+  public apiUrl = 'https://www.cargo365.co.kr/';
   id; 
-  constructor(public http: Http) {
+  auth_token;
+  constructor(public http: Http,  public sanitizer: DomSanitizer) {
     
     this.currentUrl = this.apiUrl;
+  }
+  getUrl()
+  {
+    let pos = this.currentUrl.indexOf("?");
+    let url = this.currentUrl  + (pos>0?"&":"?") +  "_i_=" + this.id + "&_a_=" + this.auth_token;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
   appStart(phone:string, token:string)
   {
@@ -34,7 +41,9 @@ export class RestProvider {
     
     
     return this.http.get( this.apiUrl + "autolink/api/appStart.do", {headers : headers } ).map(
-        res => res.json()
+        res =>  res.json() 
+         
+
     )
     
   }

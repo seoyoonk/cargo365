@@ -68,7 +68,8 @@ export class MyApp {
       }
       else
       {
-        
+        this.rest.id=data.mem_id;
+        this.rest.auth_token = data.auth_token;
         this.rootPage=HomePage;
         this.splashScreen.hide();
       }

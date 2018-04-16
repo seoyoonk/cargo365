@@ -2,7 +2,7 @@ import { Component ,ViewChild, ElementRef,SecurityContext} from '@angular/core';
 import { NavController ,AlertController } from 'ionic-angular';
  
 import {Platform} from "ionic-angular";
-import { DomSanitizer } from '@angular/platform-browser';
+
 import { RestProvider } from '../../providers/rest';
 import { FCM } from '@ionic-native/fcm';
 @Component({
@@ -12,11 +12,11 @@ import { FCM } from '@ionic-native/fcm';
 export class HomePage {
   src; 
   @ViewChild('mainFrame') mainFrame: ElementRef;
-  constructor(public navCtrl: NavController, fcm:FCM, public sanitizer: DomSanitizer,   
+  constructor(public navCtrl: NavController, fcm:FCM,   
     platform: Platform, public rest : RestProvider , alertCtrl:AlertController)
   {
     
-    this.src = sanitizer.bypassSecurityTrustResourceUrl(this.rest.currentUrl);
+    this.src = this.rest.getUrl();
     
     fcm.onNotification().subscribe(data=>{
        
@@ -43,7 +43,7 @@ export class HomePage {
   {
     
     this.rest.currentUrl =  this.rest.apiUrl + 'mautolink/cu/delivery/deliveryDetail.do?dlv_no=' +  dlv_no  ;
-    this.src = this.sanitizer.bypassSecurityTrustResourceUrl(this.rest.currentUrl);
+    this.src = this.rest.getUrl();
     this.navCtrl.setRoot(this.navCtrl.getActive().component);
   }
    
