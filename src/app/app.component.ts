@@ -30,7 +30,7 @@ export class MyApp {
         statusBar.styleDefault();
         sim.requestReadPermission();
         speechRecognition.requestPermission();
-        this.getPhoneNumber();
+      
         this.getFCMToken() ;  
       }
       else{
@@ -46,8 +46,8 @@ export class MyApp {
          
         this.token = token;
         
-        
-        this.appStart();
+         
+        this.getPhoneNumber();
       }
       );
      
@@ -70,6 +70,7 @@ export class MyApp {
       {
         this.rest.id=data.mem_id;
         this.rest.auth_token = data.auth_token;
+        
         this.rootPage=HomePage;
         this.splashScreen.hide();
       }
@@ -104,7 +105,8 @@ export class MyApp {
             setTimeout(this.getPhoneNumber(), 1000);
           }
           else{
-            location.href= this.rest.apiUrl;
+            //alert("전화번호가 없습니다.");
+            this.rootPage=HomePage;
             this.splashScreen.hide();
           }
         }

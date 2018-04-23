@@ -7,7 +7,7 @@
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <allow-navigation href="https://*.cargo365.co.kr/*" />
+    <allow-navigation href="https://www.cargo365.co.kr/*" />
     <allow-navigation href="http://192.168.2.21/*" />
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
@@ -21,7 +21,7 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
-    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="AutoHideSplashScreen" value="false" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
