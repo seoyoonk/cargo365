@@ -1,5 +1,5 @@
-import { Component,ViewChild } from '@angular/core';
-import { Platform,NavController} from 'ionic-angular'; 
+import { Component } from '@angular/core';
+import { Platform } from 'ionic-angular'; 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
@@ -7,7 +7,8 @@ import { Sim } from '@ionic-native/sim';
 import { RestProvider } from '../providers/rest';
 import { FCM } from '@ionic-native/fcm';
 import { HomePage } from '../pages/home/home';
- 
+import { LoginPage } from '../pages/login/login';
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -18,23 +19,24 @@ export class MyApp {
    
   constructor(private platform: Platform,  statusBar: StatusBar, private splashScreen: SplashScreen,
       speechRecognition:SpeechRecognition, private rest:RestProvider,private sim: Sim,
-      private fcm : FCM  ) {
+      private fcm : FCM ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       if(platform.is('cordova'))
       { 
+        this.rest.is_cordova=true;
         fcm.onNotification().subscribe(data=>{
           this.rest.currentUrl =  this.rest.apiUrl + 'mautolink/cu/delivery/deliveryDetail.do?dlv_no=' +  data.dlv_no  ;
         });
         statusBar.styleDefault();
         sim.requestReadPermission();
         speechRecognition.requestPermission();
-      
+        
         this.getFCMToken() ;  
       }
       else{
-        this.rootPage=HomePage;
+        this.rootPage=LoginPage;
         
       }
     });
@@ -45,7 +47,7 @@ export class MyApp {
     this.fcm.getToken().then(token=>{
          
         this.token = token;
-        
+       
          
         this.getPhoneNumber();
       }
@@ -59,7 +61,9 @@ export class MyApp {
     {
       return ;
     }
-    this.rest.appStart(this.phone, this.token).subscribe((data)=>{
+    this.rest.push_token = this.token;
+    this.rest.phone = this.phone;
+    this.rest.appStart( ).subscribe((data)=>{
       //this.onFCM();
       if(data.error == 'y')
       {
@@ -68,8 +72,8 @@ export class MyApp {
       }
       else
       {
-        this.rest.id=data.mem_id;
-        this.rest.auth_token = data.auth_token;
+       this.rest.id=data.mem_id;
+        this.rest.auth_token = data.auth_token; 
         
         this.rootPage=HomePage;
         this.splashScreen.hide();
@@ -85,6 +89,18 @@ export class MyApp {
   }
   getPhoneNumber()
   {
+    this.phone = this.rest.getPhoneFromStorage();
+    if(this.phone != null && this.phone != '')
+    {
+      this.appStart();
+      return;
+    }
+    /*else if(1==1)
+    {
+      this.rootPage=LoginPage;
+      this.splashScreen.hide();
+      return ;
+    }*/
     this.sim.getSimInfo().then(
       (info) => {
         if(info.phoneNumber)
@@ -95,6 +111,7 @@ export class MyApp {
             phone = "0" + info.phoneNumber.substring(3, 5) + "-" + info.phoneNumber.substring(5, info.phoneNumber.length - 4) + "-" + info.phoneNumber.substring(info.phoneNumber.length - 4, info.phoneNumber.length);
           }
           this.phone = phone;
+          
           this.appStart();
           
         }
@@ -105,8 +122,8 @@ export class MyApp {
             setTimeout(this.getPhoneNumber(), 1000);
           }
           else{
-            //alert("전화번호가 없습니다.");
-            this.rootPage=HomePage;
+            
+            this.rootPage=LoginPage;
             this.splashScreen.hide();
           }
         }

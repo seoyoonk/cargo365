@@ -1,4 +1,4 @@
-import { Component ,ViewChild, ElementRef,SecurityContext} from '@angular/core';
+import { Component ,ViewChild, ElementRef } from '@angular/core';
 import { NavController ,AlertController } from 'ionic-angular';
  
 import {Platform} from "ionic-angular";
@@ -17,24 +17,26 @@ export class HomePage {
   {
     
     this.src = this.rest.getUrl();
-    
-    fcm.onNotification().subscribe(data=>{
-       
-      if(data.dlv_no)
-      {
-         if(!data.wasTapped)
-         {
-          let alert = alertCtrl.create({
-            title: '알림',
-            subTitle: data.body,
-            buttons: ['OK']
-          });
-          alert.present(); 
-         }
-         this.goDeliveryDetail(data.dlv_no) ;
-         
-      }
-    }) 
+    if(this.rest.is_cordova)
+    {
+      fcm.onNotification().subscribe(data=>{
+        
+        if(data.dlv_no)
+        {
+          if(!data.wasTapped)
+          {
+            let alert = alertCtrl.create({
+              title: '알림',
+              subTitle: data.body,
+              buttons: ['OK']
+            });
+            alert.present(); 
+          }
+          this.goDeliveryDetail(data.dlv_no) ;
+          
+        }
+      }) 
+    }
     /*setTimeout(() => {
       this.goDeliveryDetail('1519698707944427512');
     }, 5000);*/

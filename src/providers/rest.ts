@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http,Headers } from '@angular/http';
 import { DomSanitizer } from '@angular/platform-browser';
+import { LoadingController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
 
 /*
@@ -11,12 +13,17 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class RestProvider {
-  //public apiUrl = 'http://192.168.2.21/';
+  public apiUrl = 'http://192.168.2.148/';
   public currentUrl;
-  public apiUrl = 'https://www.cargo365.co.kr/';
+  //public apiUrl = 'https://www.cargo365.co.kr/';
   id; 
+  loading;
   auth_token;
-  constructor(public http: Http,  public sanitizer: DomSanitizer) {
+  phone;
+  pwd;
+  push_token;
+  is_cordova = false;
+  constructor(public http: Http, private loadingCtrl: LoadingController,public storage: Storage , public sanitizer: DomSanitizer) {
     
     this.currentUrl = this.apiUrl;
   }
@@ -26,8 +33,42 @@ export class RestProvider {
     let url = this.currentUrl  + (pos>0?"&":"?") +  "_i_=" + this.id + "&_a_=" + this.auth_token;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
-  appStart(phone:string, token:string)
+  showLoading(msg) {
+    this.loading = this.loadingCtrl.create({
+      content: msg
+    });
+    this.loading.present();
+  }
+  closeLoading() {
+    if (this.loading != null) this.loading.dismiss();
+  }
+  getPhoneFromStorage()
   {
+    this.phone  =  this.storage.get("phone");
+    return this.phone;
+  }
+  login(id, pwd)
+  {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    headers.append("x-id", id);
+    headers.append("x-push_tp", '3');
+    headers.append("x-pwd", pwd);
+     
+    return this.http.get( this.apiUrl + "autolink/cu/member/appLogin.do", {headers : headers } ).map(
+      res =>  res.json() 
+      
+
+    )
+  }
+  saveInfo()
+  {
+    alert('ok');
+    this.storage.set("phone", this.phone);
+  }
+  appStart(  )
+  {
+    let phone = this.phone;
     let headers = new Headers();
     if(phone.startsWith("+82"))
     {
@@ -36,7 +77,7 @@ export class RestProvider {
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append("x-phone", phone);
     headers.append("x-push_tp", '3');
-    headers.append("x-push_token", token);
+    headers.append("x-push_token", this.push_token);
     
     
     

@@ -29,10 +29,9 @@
     "@ionic-native/splash-screen": "4.3.0",
     "@ionic-native/status-bar": "4.3.0",
     "@ionic/storage": "2.0.1",
-    "cordova-android": "^6.2.3",
     "cordova-plugin-advanced-http": "^1.6.1",
     "cordova-plugin-compat": "^1.0.0",
-    "cordova-plugin-crosswalk-webview": "^2.3.0",
+    "cordova-plugin-crosswalk-webview": "^2.4.0",
     "cordova-plugin-device": "^1.1.4",
     "cordova-plugin-fcm": "^2.1.2",
     "cordova-plugin-file": "^4.3.3",
@@ -61,20 +60,18 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-whitelist": {},
       "ionic-plugin-keyboard": {},
+      "cordova-plugin-speechrecognition": {},
+      "cordova-plugin-sim": {},
+      "cordova-plugin-advanced-http": {},
+      "cordova-plugin-fcm": {},
       "cordova-plugin-crosswalk-webview": {
         "XWALK_VERSION": "23+",
         "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
         "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
         "XWALK_MODE": "embedded",
         "XWALK_MULTIPLEAPK": "true"
-      },
-      "cordova-plugin-speechrecognition": {},
-      "cordova-plugin-sim": {},
-      "cordova-plugin-advanced-http": {},
-      "cordova-plugin-fcm": {}
+      }
     },
-    "platforms": [
-      "android"
-    ]
+    "platforms": []
   }
 }

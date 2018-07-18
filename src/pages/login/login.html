@@ -1,0 +1,23 @@
+
+<ion-content>
+    <img src="assets/login_logo.png"  />
+    <p></p><p></p><p></p>
+    <ion-list>
+  
+    <ion-item>
+      <ion-label >아이디</ion-label>
+      <ion-input type="text"  [(ngModel)]="id"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label >패스워드</ion-label>
+      <ion-input id="pwd" type="password" [(ngModel)]="pwd"></ion-input>
+    </ion-item>
+  
+  </ion-list>
+  
+  <div padding>
+      <button ion-button color="primary" block large (click)="login()">로그인</button>
+      회원가입은 1577-2051로 문의하세요.
+  </div>
+  </ion-content>

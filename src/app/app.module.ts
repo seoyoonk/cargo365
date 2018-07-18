@@ -10,18 +10,21 @@ import { HttpModule } from '@angular/http';
 import { Sim } from '@ionic-native/sim';
 import { FCM } from '@ionic-native/fcm';
 import { HomePage } from '../pages/home/home'; 
+import { LoginPage } from '../pages/login/login'; 
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [
-    MyApp,HomePage
+    MyApp,HomePage,LoginPage
   ],
   imports: [
     BrowserModule, HttpModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,HomePage
+    MyApp,HomePage,LoginPage
   ],
   providers: [
     StatusBar,
