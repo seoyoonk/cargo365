@@ -13,9 +13,9 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class RestProvider {
-  public apiUrl = 'http://v2.autolink.center/';
+  //public apiUrl = 'http://v2.autolink.center/';
   public currentUrl;
-  //public apiUrl = 'https://www.cargo365.co.kr/';
+  public apiUrl = 'https://www.cargo365.co.kr/';
   id; 
   loading;
   auth_token;
