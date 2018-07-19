@@ -130,7 +130,7 @@ export class MyApp {
         this.appStart();
         return;
       }
-      else if( !this.platform.is('ios')) 
+      else if( this.platform.is('ios')) 
       {
        
         this.rootPage=LoginPage;

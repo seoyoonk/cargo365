@@ -62,7 +62,7 @@ export class RestProvider {
   }
   saveInfo()
   {
-    alert('ok');
+     
     this.storage.set("phone", this.phone);
   }
   appStart(  )
