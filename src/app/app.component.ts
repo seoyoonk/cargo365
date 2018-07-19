@@ -30,7 +30,7 @@ export class MyApp {
           this.rest.currentUrl =  this.rest.apiUrl + 'mautolink/cu/delivery/deliveryDetail.do?dlv_no=' +  data.dlv_no  ;
         });
         statusBar.styleDefault();
-        sim.requestReadPermission();
+        if(!platform.is('ios')) sim.requestReadPermission();
         speechRecognition.requestPermission();
         
         this.getFCMToken() ;  
@@ -43,7 +43,7 @@ export class MyApp {
   }
  
   getFCMToken() {
-    console.log("cargo365: get fcm start");
+   
     this.fcm.getToken().then(token=>{
          
         this.token = token;
@@ -87,20 +87,9 @@ export class MyApp {
     })
 
   }
-  getPhoneNumber()
+  getPhoneNumberFromSim()
   {
-    this.phone = this.rest.getPhoneFromStorage();
-    if(this.phone != null && this.phone != '')
-    {
-      this.appStart();
-      return;
-    }
-    /*else if(1==1)
-    {
-      this.rootPage=LoginPage;
-      this.splashScreen.hide();
-      return ;
-    }*/
+
     this.sim.getSimInfo().then(
       (info) => {
         if(info.phoneNumber)
@@ -129,6 +118,33 @@ export class MyApp {
         }
       
     });
+  }
+  getPhoneNumber()
+  {
+    
+    this.rest.getPhoneFromStorage().then((val) => {
+      this.phone = val;
+      
+      if(this.phone != null && this.phone != '')
+      {
+        this.appStart();
+        return;
+      }
+      else if( !this.platform.is('ios')) 
+      {
+       
+        this.rootPage=LoginPage;
+        this.splashScreen.hide();
+        return ;
+      }
+      else
+      {
+        this.getPhoneNumberFromSim();
+
+      }
+      }
+    );
+   
   }
 }
 

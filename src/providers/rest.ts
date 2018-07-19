@@ -13,7 +13,7 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class RestProvider {
-  public apiUrl = 'http://192.168.2.148/';
+  public apiUrl = 'http://v2.autolink.center/';
   public currentUrl;
   //public apiUrl = 'https://www.cargo365.co.kr/';
   id; 
@@ -44,8 +44,7 @@ export class RestProvider {
   }
   getPhoneFromStorage()
   {
-    this.phone  =  this.storage.get("phone");
-    return this.phone;
+      return this.storage.get("phone")
   }
   login(id, pwd)
   {
