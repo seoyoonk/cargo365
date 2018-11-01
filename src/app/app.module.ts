@@ -6,7 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import { MyApp } from './app.component';
 import { RestProvider } from '../providers/rest';
-import { HttpModule } from '@angular/http';
+import { HttpModule , JsonpModule} from '@angular/http';
 import { Sim } from '@ionic-native/sim';
 import { FCM } from '@ionic-native/fcm';
 import { HomePage } from '../pages/home/home'; 
@@ -18,7 +18,7 @@ import { IonicStorageModule } from '@ionic/storage';
     MyApp,HomePage,LoginPage
   ],
   imports: [
-    BrowserModule, HttpModule,
+    BrowserModule, HttpModule, JsonpModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot()
   ],
@@ -28,7 +28,7 @@ import { IonicStorageModule } from '@ionic/storage';
   ],
   providers: [
     StatusBar,
-    SplashScreen,SpeechRecognition, RestProvider, Sim, HttpModule,FCM, 
+    SplashScreen,SpeechRecognition, RestProvider, Sim, HttpModule, JsonpModule, FCM, 
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
