@@ -54,7 +54,7 @@ export class RestProvider {
     headers.append("x-id", id);
     headers.append("x-push_tp", '3');
     headers.append("x-pwd", pwd);
-    var body = "push_tp=3&id=" + encodeURIComponent(id) + "&pwd=" + encodeURIComponent(pwd) ;
+    var body = "push_tp=3&id=" + encodeURIComponent(id) + "&pwd=" + encodeURIComponent( window.btoa(pwd)) ;
     var options = {headers : headers};
 
 
