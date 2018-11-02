@@ -49,21 +49,10 @@ export class RestProvider {
   }
   login(id, pwd)
   {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
-    headers.append("x-id", id);
-    headers.append("x-push_tp", '3');
-    headers.append("x-pwd", pwd);
+    
     var body = "push_tp=3&id=" + encodeURIComponent(id) + "&pwd=" + encodeURIComponent( window.btoa(pwd)) ;
-    var options = {headers : headers};
-
-
-    /*return this.http.get( this.apiUrl + "autolink/cu/member/appLogin.do", {headers : headers } ).map(
-      res =>  res.json() 
-      
-
-    )*/
-    return this.jsonp.request(this.apiUrl + "autolink/cu/member/appLogin.do?callback=JSONP_CALLBACK&" + body, options)  
+    
+    return this.jsonp.request(this.apiUrl + "autolink/cu/member/appLogin.do?callback=JSONP_CALLBACK&" + body )  
         .map(res => {
           return res.json();
         });
@@ -73,26 +62,37 @@ export class RestProvider {
      
     this.storage.set("phone", this.phone);
   }
-  appStart(  )
+  appStart( isJsonp )
   {
     let phone = this.phone;
-    let headers = new Headers();
+    
     if(phone.startsWith("+82"))
     {
         phone = "0" + phone.substring(3,5) + "-" + phone.substring(5,phone.length-4) + "-" + phone.substring(phone.length-4,phone.length);
     }
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
-    headers.append("x-phone", phone);
-    headers.append("x-push_tp", '3');
-    headers.append("x-push_token", this.push_token);
+   
+    if(isJsonp)
+    {
+      var body = "push_tp=3&p=" + encodeURIComponent(phone) + "&push_token=" + encodeURIComponent(this.push_token) ;
     
-    
-    
-    return this.http.get( this.apiUrl + "autolink/api/appStart.do", {headers : headers } ).map(
-        res =>  res.json() 
-         
+      return this.jsonp.request(this.apiUrl + "autolink/api/appStart.do?callback=JSONP_CALLBACK&" + body )  
+        .map(res => {
+          return res.json();
+        });
+    }
+    else
+    {
+      let headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded');
+      headers.append("x-phone", phone);
+      headers.append("x-push_tp", '3');
+      headers.append("x-push_token", this.push_token);
+      return this.http.get( this.apiUrl + "autolink/api/appStart.do", {headers : headers } ).map(
+          res =>  res.json() 
+            
 
-    )
+      )
+    }
     
   }
 }

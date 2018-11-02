@@ -63,7 +63,7 @@ export class MyApp {
     }
     this.rest.push_token = this.token;
     this.rest.phone = this.phone;
-    this.rest.appStart( ).subscribe((data)=>{
+    this.rest.appStart( this.platform.is('ios') ).subscribe((data)=>{
       //this.onFCM();
       if(data.error == 'y')
       {
