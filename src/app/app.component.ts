@@ -30,9 +30,10 @@ export class MyApp {
           this.rest.currentUrl =  this.rest.apiUrl + 'mautolink/cu/delivery/deliveryDetail.do?dlv_no=' +  data.dlv_no  ;
         });
         statusBar.styleDefault();
-        if(!platform.is('ios')) sim.requestReadPermission();
-        speechRecognition.requestPermission();
-        
+        if(!platform.is('ios'))
+        { sim.requestReadPermission();
+          speechRecognition.requestPermission();
+        }
         this.getFCMToken() ;  
       }
       else{
@@ -45,7 +46,7 @@ export class MyApp {
   getFCMToken() {
    
     this.fcm.getToken().then(token=>{
-         
+        if(token == null) token = ""; 
         this.token = token;
        
          
@@ -59,22 +60,24 @@ export class MyApp {
   {
     if(this.phone==null || this.token==null)
     {
+      this.rootPage=LoginPage;
+      this.splashScreen.hide();
       return ;
     }
     this.rest.push_token = this.token;
     this.rest.phone = this.phone;
-    this.rest.appStart( ).subscribe((data)=>{
+    this.rest.appStart( this.platform.is('ios')).subscribe((data)=>{
       //this.onFCM();
       if(data.error == 'y')
       {
-        alert(data.error_msg);
-        this.platform.exitApp();
+        this.rootPage=LoginPage;
+        this.splashScreen.hide();
       }
       else
       {
-       this.rest.id=data.mem_id;
+        this.rest.id=data.mem_id;
         this.rest.auth_token = data.auth_token; 
-        
+        this.rest.saveInfo();
         this.rootPage=HomePage;
         this.splashScreen.hide();
       }
@@ -89,12 +92,12 @@ export class MyApp {
   }
   getPhoneNumberFromSim()
   {
-
+     
     this.sim.getSimInfo().then(
       (info) => {
         if(info.phoneNumber)
         {
-          
+         
           let phone: string;
           if (info.phoneNumber.startsWith("+82")) {
             phone = "0" + info.phoneNumber.substring(3, 5) + "-" + info.phoneNumber.substring(5, info.phoneNumber.length - 4) + "-" + info.phoneNumber.substring(info.phoneNumber.length - 4, info.phoneNumber.length);
@@ -106,9 +109,10 @@ export class MyApp {
         }
         else
         {
+           
           if(info.phoneCount>0)
           {
-            setTimeout(this.getPhoneNumber(), 1000);
+            setTimeout(this.getPhoneNumberFromSim(), 1000);
           }
           else{
             
@@ -139,7 +143,18 @@ export class MyApp {
       }
       else
       {
-        this.getPhoneNumberFromSim();
+        this.sim.hasReadPermission().then(
+          (info) => {
+            if(info)
+            {
+              this.getPhoneNumberFromSim();
+            }
+            else{
+              setTimeout(this.getPhoneNumberFromSim(), 1000);
+            }
+          });
+        
+        
 
       }
       }
