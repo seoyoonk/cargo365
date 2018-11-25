@@ -28,12 +28,12 @@ export class LoginPage {
             if(data.error != null)
             {
               this.rest.closeLoading();
-              alert(data.error);
+              alert(data.error_msg);
               return ;
             }
             else
             {
-              
+            
               this.rest.phone =data.phone;
               this.rest.id=data.mem_id;
               this.rest.auth_token = data.auth_token;
